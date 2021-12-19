@@ -6,26 +6,31 @@ all:
   children:
     kube_cluster:
       vars:
-        docker_registry: http://192.168.232.199
+        docker_registry: http://192.168.122.199
         k3s_cluster_secret: Ahguario7Eefooph6ooweish9peenaeshaideeFokuay7iehoe3ahgei3aithoo7 # This is a secret and should be Vaulted!
         k3s_encryption_secret: "4mLnvo0Lrb7iSUv7yF5IKOYvEkcnGfyBauzhCjtNRgc=" # This is a secret and should be Vaulted!
         k3s_version: v1.20.5+k3s1
         external_interface: eth1
         internal_interface: eth0
-        metallb_external_ip_range: 192.168.0.200-192.168.0.240
-        metallb_internal_ip_range: 192.168.232.200-192.168.232.240
-        # falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
+        metallb_external_ip_range: 192.168.1.200-192.168.1.240
+        metallb_internal_ip_range: 192.168.122.200-192.168.122.240
+        falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
       children:
         kube_master:
           hosts:
             master01:
-              ansible_host: 192.168.232.11
+              ansible_host: 192.168.122.10
             master02:
-              ansible_host: 192.168.232.12
+              ansible_host: 192.168.122.11
             master03:
-              ansible_host: 192.168.232.13
+              ansible_host: 192.168.122.12
         kube_node:
           hosts:
             worker01:
-              ansible_host: 192.168.232.41
+              ansible_host: 192.168.122.21
+            worker02:
+              ansible_host: 192.168.122.22
+            worker03:
+              ansible_host: 192.168.122.23
 
+...
