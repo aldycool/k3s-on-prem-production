@@ -47,6 +47,8 @@
   shell: |
     set -o pipefail
     {{ kubectl_cmd }}  get nodes  | awk '{print $2}' | grep ^Ready
+  args:
+    executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
   register: workers
   until:
     - workers.rc == 0
@@ -61,6 +63,8 @@
   shell: |
     set -o pipefail
     {{ kubectl_cmd }} get nodes  | grep -Ev '{% for host in groups['kube_cluster'] %}{{ host }}|{% endfor %}AGE'|cut -d' ' -f1
+  args:
+    executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
   register: removed_workers
   run_once: yes
   failed_when: no

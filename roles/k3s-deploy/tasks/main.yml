@@ -5,6 +5,15 @@
     manager: "auto"
   tags: always
 
+# MOD: The artifacts folder is used everywhere but never created
+- name: Prepare artifacts directory
+  file:
+    path: artifacts
+    state: directory
+    owner: k3s
+    group: k3s
+    mode: 0755
+
 - include_tasks:
     file: k3s_binary.yml
     apply:

@@ -21,6 +21,8 @@
   shell: |
     set -o pipefail
     {{ kubectl_cmd }} get pods -n ingress-nginx | tail -n +2 | grep -Ev "Completed|Running|Success"
+  args:
+    executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
   register: pods
   until: (pods.stdout_lines | length ) == 0
   failed_when: no
@@ -52,6 +54,8 @@
       shell: |
         set -o pipefail
         {{ kubectl_cmd }} get pods -n ingress-nginx-internal | tail -n +2 | grep -Ev "Completed|Running|Success"
+      args:
+        executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
       register: pods
       until: (pods.stdout_lines | length ) == 0
       failed_when: no
@@ -64,6 +68,8 @@
       shell: |
         set -o pipefail
         {{ kubectl_cmd }} get svc -n ingress-nginx-internal ingress-nginx-internal-controller | awk '{print $4}' | tail -n 1
+      args:
+        executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
       changed_when: no
       register: lb_internal_address
 
@@ -79,6 +85,8 @@
       shell: |
         set -o pipefail
         {{ kubectl_cmd }} get svc -n ingress-nginx ingress-nginx-controller | awk '{print $4}' | tail -n 1
+      args:
+        executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
       changed_when: no
       register: lb_address
 

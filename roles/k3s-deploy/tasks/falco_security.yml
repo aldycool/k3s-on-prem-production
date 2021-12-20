@@ -44,6 +44,8 @@
   shell: |
     set -o pipefail
     lsmod | grep falco
+  args:
+    executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
   changed_when: no
   failed_when: no
   register: falco_module
@@ -117,6 +119,8 @@
   shell: |
     set -o pipefail
     {{ kubectl_cmd }} -n kube-system describe secret admin-user-token| grep '^token:' | awk '{print $2}'
+  args:
+    executable: /bin/bash # MOD: Ubuntu needs to execute with bash to use pipefail
   changed_when: no
   register: api_token
   when:
