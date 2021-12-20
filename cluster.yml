@@ -8,11 +8,11 @@
   max_fail_percentage: 0
   roles:
     # - hardening
-    # I gave up fixing hardening to work with Ubuntu 20.04
+    # MOD: I gave up fixing hardening to work with Ubuntu 20.04
     # Using this instead: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible
-    # Checkpoint Remarks
+    # MOD: Checkpoint Manual Conditional Remarks
     # - cis-ubuntu-2004-ansible
-    - k3s-dependencies
-    # - k3s-deploy
+    # - k3s-dependencies
+    - k3s-deploy
 
 ...

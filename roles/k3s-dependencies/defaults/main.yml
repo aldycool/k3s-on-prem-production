@@ -5,18 +5,19 @@ cluster_cidr: 10.43.0.0/16
 service_cidr: 10.44.0.0/16
 
 k3s_dependencies:
-  - conntrack-tools
+  - conntrack  # MOD: conntrack-tools
   - curl
   - ebtables
-  - epel-release
+  # - epel-release # MOD: CentOS specific
   - ethtool
   - gawk
   - grep
   - ipvsadm
-  - iscsi-initiator-utils
-  - libseccomp
+  - open-iscsi # MOD: iscsi-initiator-utils
+  - libseccomp-dev # MOD: libseccomp
   - socat
   - util-linux
+  - firewalld # MOD: Ubuntu specific
 
 external_interface: eth0
 internal_interface: eth0

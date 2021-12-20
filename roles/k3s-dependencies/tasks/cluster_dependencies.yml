@@ -41,6 +41,12 @@
       overlay
     mode: 0600
 
+# MOD: The next sysctl command require to set conntrack values, but the installed conntrack dependency does not generate its files (nf_conntrack_*) in :/proc/sys/net/netfilter by default
+- name: Generate nf_conntrack files in netfilter folder
+  modprobe:
+    name: ip_conntrack
+    state: present
+
 - name: Set sysctl ipv4 and ipv6 conf
   sysctl:
     name: "{{ item.key }}"
@@ -111,6 +117,18 @@
             - "firewall-cmd --zone=internal --change-interface={{ internal_interface }} --permanent"
             - "firewall-cmd --reload"
           when: internal_interface not in ''.join(internal_zone.stdout_lines)
+
+        # MOD: eth1 on Ubuntu is not automatically registered as public zone
+        - name: Get public zone interface
+          command: "firewall-cmd --list-interface --zone=public"
+          register: public_zone
+          changed_when: no
+        - name: Set external interface to public zone
+          command: "{{ item }}"
+          with_items:
+            - "firewall-cmd --zone=public --change-interface={{ external_interface }} --permanent"
+            - "firewall-cmd --reload"
+          when: external_interface not in ''.join(public_zone.stdout_lines)
 
         - name: Open external ports
           firewalld:
@@ -191,8 +209,9 @@
         - 30000-32767/udp   # NodePort port range
 
   ## End block
-  when:
-    - "'firewalld' in ansible_facts.packages"
+  # MOD: Ubuntu does not install firewalld by default. The firewalld package for Ubuntu is installed in the dependencies.
+  # when:
+  #   - "'firewalld' in ansible_facts.packages"
   tags: firewall
 
 # Workaround to the RPM/YUM hardening

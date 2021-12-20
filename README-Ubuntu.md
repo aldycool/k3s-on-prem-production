@@ -90,17 +90,18 @@
   ```
 
 ## Notes on cluster.yml
-- The original hardening role is replaced with cis-ubuntu-2004-ansible, taken from: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible, because it is too much difference to work for Ubuntu 20.04. The new role also have errors, find the "# MOD:" remark all over the code to find my changes.
+- The original hardening role is replaced with cis-ubuntu-2004-ansible, taken from: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible, because it is too much difference to work for Ubuntu 20.04.
+- Find the "# MOD:" remark all over the code to find my changes.
 
 ## Local Temporary Commands
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-Control\K3S-Control.vmx" "Hardened"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-Control\K3S-Control.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-Control\K3S-Control.vmx"
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-01\K3S-01.vmx" "Hardened"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-01\K3S-01.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-01\K3S-01.vmx"
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-02\K3S-02.vmx" "Hardened"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-02\K3S-02.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-02\K3S-02.vmx"
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-03\K3S-03.vmx" "Hardened"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-03\K3S-03.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-03\K3S-03.vmx"
-"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-04\K3S-04.vmx" "Hardened"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-04\K3S-04.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-04\K3S-04.vmx"
 scp -r "C:\Users\Administrator\Downloads\k3s-on-prem-production" k3s@192.168.232.10:~/
