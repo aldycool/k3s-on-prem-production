@@ -7,12 +7,12 @@
   hosts: kube_cluster
   max_fail_percentage: 0
   roles:
+    # MOD: Check specific Ubuntu compatibility with Kubernetes
     # - hardening
-    # MOD: I gave up fixing hardening to work with Ubuntu 20.04
-    # Using this instead: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible
-    # MOD: Checkpoint Manual Conditional Remarks
-    # - cis-ubuntu-2004-ansible
-    # - k3s-dependencies
+    # MOD: I gave up fixing the built-in hardening role to make it work with Ubuntu 20.04
+    # Replaced it with this instead: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible
+    - cis-ubuntu-2004-ansible
+    - k3s-dependencies
     - k3s-deploy
 
 ...

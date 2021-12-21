@@ -12,6 +12,16 @@
     owner: root
     group: root
 
+# MOD: The created services will error if this folder is not created first
+# NOTE: This is the same as the one in cluster_server.yml
+- name: Prepare k3s apiServer audit log folder
+  file:
+    path: /var/lib/rancher/audit
+    state: directory
+    mode: 0700
+    owner: root
+    group: root
+
 - name: Check if cluster is already bootstrapped
   command: |
     {{ kubectl_cmd }} get nodes

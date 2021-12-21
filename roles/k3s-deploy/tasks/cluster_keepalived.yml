@@ -5,6 +5,12 @@
     name: keepalived
     state: present
 
+# MOD: Sometimes firewalld is not started yet here
+- name: Check and start firewalld service
+  systemd:
+    name: firewalld
+    state: started
+
 - name: Add firewalld rich rules /vrrp
   firewalld:
     rich_rule: rule protocol value="vrrp" accept
@@ -24,6 +30,7 @@
   with_items:
     - {name: net.ipv4.ip_nonlocal_bind, value: 1}
 
+# MOD: The pidof in the template is replaced with pgrep, somehow pidof in Ubuntu always returs exit code 1
 - name: Configure keepalived
   template:
     src: keepalived/keepalived.conf.j2

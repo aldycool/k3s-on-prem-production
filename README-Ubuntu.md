@@ -8,6 +8,7 @@
   - Master: 2VCPU + 2GB + 60GB
   - Worker: 2VCPU + 4GB + 60GB
 - UserName / Password : k3s / k3s1234
+- For hostnames, use hostnames as specified in the Ansible inventory file (`inventory-k3s.yml`), ex: `master01`, `master02`, etc.
 - On each VM, we must have two NICs: internal and external. In VMWare, add the NICs in this order: 1. NAT, 2. Bridged. The NAT will be eth0 and will act as internal, and Bridged will be eth1 and will act as external. Because of VMWare (or probably bare-metal) will rename eth0 to ens33 and eth1 to ens37, after hardening later, this will not be compatible. To disable the renaming:
   ```
   # To ensure it is really renamed, check this output
@@ -76,6 +77,10 @@
   ssh-keygen -t rsa # This will generate ~/.ssh/id_rsa.pub that needs to be copied to all VMs
   ssh-copy-id -i ~/.ssh/id_rsa.pub k3s@192.168.232.11 # and the rest of the VM IP Addresses
   ```
+- Install kubectl for later, after the kubeconfig file copied to Control, to set default kubeconfig:
+  ```
+  export KUBECONFIG=~/k3s-on-prem-production/artifacts/k3s-kube-config
+  ```
 
 ## Execute Ansible Script
 - In Control VM:
@@ -104,4 +109,7 @@
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-03\K3S-03.vmx"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-04\K3S-04.vmx" "Dependencies"
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-04\K3S-04.vmx"
+"C:\Users\Administrator\Documents\Virtual Machines\K3S-05\K3S-05.vmx" "Dependencies"
+"C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws start "C:\Users\Administrator\Documents\Virtual Machines\K3S-05\K3S-05.vmx"
 scp -r "C:\Users\Administrator\Downloads\k3s-on-prem-production" k3s@192.168.232.10:~/
+

@@ -14,6 +14,9 @@ Wants=network-online.target
 # TLS - allow only strong ciphers
 ###########
 [Service]
+# MOD: Looks like Ubuntu need to define User + Group to allow k3s to behave normally on startup
+User=root
+Group=root
 ExecStart={{ k3s_binary_path }}/k3s server \
     --kube-apiserver-arg='enable-admission-plugins=AlwaysPullImages,DefaultStorageClass,DefaultTolerationSeconds,LimitRanger,MutatingAdmissionWebhook,NamespaceLifecycle,NodeRestriction,PersistentVolumeClaimResize,PodSecurityPolicy,Priority,ResourceQuota,ServiceAccount,TaintNodesByCondition,ValidatingAdmissionWebhook' \
     --kube-apiserver-arg='encryption-provider-config=/etc/k3s-encryption.yaml' \
@@ -69,14 +72,16 @@ Type=notify
 AssertSecurity=selinux
 ConditionSecurity=selinux
 {% endif %}
-LockPersonality=yes
-PrivateTmp=yes
-ProtectHome=yes
-ProtectHostname=yes
-ProtectKernelLogs=yes
-ProtectKernelTunables=yes
-ProtectSystem=full
-ReadWriteDirectories=/var/lib/ /var/run /run /var/log/ /lib/modules /etc/rancher/
+# MOD: On Ubuntu, Kubelet needs to write to /dev/kmsg, error: "Failed to run kubelet" err="failed to run Kubelet: failed to create kubelet: open /dev/kmsg: permission denied"
+# Other than that, there are several more errors, too much to learn one by one, disable all of these for now
+# LockPersonality=yes
+# PrivateTmp=yes
+# ProtectHome=yes
+# ProtectHostname=yes
+# ProtectKernelLogs=yes
+# ProtectKernelTunables=yes
+# ProtectSystem=full
+# ReadWriteDirectories=/var/lib/ /var/run /run /var/log/ /lib/modules /etc/rancher/
 
 [Install]
 WantedBy=multi-user.target

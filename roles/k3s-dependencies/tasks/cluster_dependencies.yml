@@ -6,6 +6,12 @@
     state: present
     name: "{{ k3s_dependencies }}"
 
+# MOD: Rename hostname to match the inventory file (if not renamed to match inventory, masters will have various errors and cannot form cluster on k3s-deploy role)
+- name: Rename hostname to match the inventory file
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: ansible_hostname != inventory_hostname
+
 - name: Update the /etc/hosts file with node name
   lineinfile:
     path: /etc/hosts
@@ -14,6 +20,28 @@
     state: present
     backup: yes
   with_items: "{{ groups['kube_cluster'] }}"
+
+# MOD: Swap off
+- name: Disable Swap
+  shell: "swapoff -a"
+  changed_when: no
+
+# MOD: Swap off at startup
+- name: Disable Swap at startup
+  replace:
+    path: /etc/fstab
+    regexp: '(^\s*/swap.*)'
+    replace: '# \1'
+
+# MOD: Check NTP Server
+- name: Check the default NTP server connectivity
+  shell: "ping -c 4 {{ check_ntp_server_host }}"
+  changed_when: no
+
+# MOD: Set Time Zone
+- name: Set TimeZone
+  community.general.timezone:
+    name: "{{ time_zone }}"
 
 - name: Add the br_netfilter module
   modprobe:
@@ -66,8 +94,8 @@
     - {key: net.ipv4.conf.all.route_localnet, value: 1}
     - {key: net.ipv4.conf.default.forwarding, value: 1}
     - {key: net.ipv4.ip_forward, value: 1}
-    - {key: net.ipv6.conf.all.forwarding, value: 1}
-    - {key: net.ipv6.conf.default.forwarding, value: 1}
+    # - {key: net.ipv6.conf.all.forwarding, value: 1} # MOD: ipv6 is already disabled in cis-ubuntu-2004-ansible role
+    # - {key: net.ipv6.conf.default.forwarding, value: 1} # MOD: ipv6 is already disabled in cis-ubuntu-2004-ansible role
     - {key: net.netfilter.nf_conntrack_max, value: 131072}
     - {key: net.netfilter.nf_conntrack_tcp_timeout_close_wait, value: 3600}
     - {key: net.netfilter.nf_conntrack_tcp_timeout_established, value: 86400}
