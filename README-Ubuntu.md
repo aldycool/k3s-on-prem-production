@@ -1,3 +1,5 @@
+# NOTE: This repository has been moved to: https://github.com/aldycool/k3s-deploy for more structured approach.
+
 # Ubuntu 20.04 Adaptation README
 
 - Following this: https://digitalis.io/blog/kubernetes/k3s-lightweight-kubernetes-made-ready-for-production-part-1/ with some modifications in this repository to adjust to Ubuntu 20.04 distro.
@@ -97,6 +99,55 @@
 ## Notes on cluster.yml
 - The original hardening role is replaced with cis-ubuntu-2004-ansible, taken from: https://github.com/alivx/CIS-Ubuntu-20.04-Ansible, because it is too much difference to work for Ubuntu 20.04.
 - Find the "# MOD:" remark all over the code to find my changes.
+
+## Notes Deployments
+- Due to PodSecurityPolicy, all pod deployments (except the ones deployed into `kube-system` namespace) have to specify `runAsUser` (which means not running as root), for example:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ...
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ...
+  template:
+    metadata:
+      labels:
+        app: ...
+    spec:
+      securityContext:
+        runAsUser: 1000 # Have to indicate this flag
+```
+
+## Misc Notes
+- To delete / remove completed pods:
+  ```
+  kubectl delete pod --field-selector=status.phase==Succeeded -A
+  ```
+- To safely shutdown node:
+  ```
+  kubectl get node # get all node names
+  kubectl drain master01
+  # Or use special flags when notified in the error message:
+  kubectl drain worker02 --delete-emptydir-data --ignore-daemonsets
+  # After all nodes are drained, the nodes can be safely powered off
+  # After powering up again, use uncordon to mark all nodes schedulable:
+  kubectl uncordon master01
+  ```
+- To edit falco sidekick secrets (updating its configuration):
+  ```
+  kubectl get secret -n falco # get the secret name
+  kubectl edit secret falcosidekick -n falco # editor will open, put in the base64 encode values here
+  ```
+- To restart falco pods (editing configuration requires pods to be restarted):
+  ```
+  kubectl -n falco rollout restart deploy
+  # The kubeles delete-pod function must be edited because it was deployed using templates, and the configuration must be empty when the template was written, so an edit to the function and then restart also needed.
+  kubectl -n kubeless rollout restart deploy # this also needs to be restarted (delete-pod notification)
+  ```
+- We still have problem in the new nginx ingress IngressClass resource (https://kubernetes.github.io/ingress-nginx/) so we are still pegged on the old k3s version v1.20.5+k3s1 with the old nginx ingress version 0.45.0. The problem is due to our current setup which uses two nginx controllers for external and internal added with ValidatingWebHookConfiguration, which leads to this problem: https://github.com/kubernetes/ingress-nginx/issues/7546 (still haven't resolved). For now, switch back to old versions.
 
 ## Local Temporary Commands
 "C:\Program Files (x86)\VMware\VMware Workstation\vmrun.exe" -T ws revertToSnapshot "C:\Users\Administrator\Documents\Virtual Machines\K3S-Control\K3S-Control.vmx" "Dependencies"

@@ -14,5 +14,4 @@
     - cis-ubuntu-2004-ansible
     - k3s-dependencies
     - k3s-deploy
-
 ...

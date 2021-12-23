@@ -12,6 +12,7 @@ all:
     time_zone: Asia/Jakarta
     # MOD:
     # These are from k3s-deploy/defaults/main.yml which somehow forgotten to be listed here to be overriden
+    nginx_ingress_version: 0.45.0
     keepalived_interface: eth0
     keepalived_addr_cidr: 192.168.232.100/24
     keepalived_ip: 192.168.232.100
@@ -26,7 +27,7 @@ all:
         internal_interface: eth0
         metallb_external_ip_range: 192.168.0.200-192.168.0.240
         metallb_internal_ip_range: 192.168.232.200-192.168.232.240
-        # falco_sidekick_slack: "https://hooks.slack.com/services/XXXXX-XXXX-XXXX" # This is a secret and should be Vaulted!
+        falco_sidekick_slack: "https://hooks.slack.com/services/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" # This is a secret and should be Vaulted!
       children:
         kube_master:
           hosts:
